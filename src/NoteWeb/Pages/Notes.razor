@@ -1,0 +1,47 @@
+﻿@page "/notes"
+@inject HttpClient Http
+
+<PageTitle>Notes</PageTitle>
+
+<h1>Notes</h1>
+
+@if (notes == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Content</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var note in notes)
+            {
+                <tr>
+                    <td>@note.id</td>
+                    <td>@note.content</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private Note[]? notes;
+
+    protected override async Task OnInitializedAsync()
+    {
+        notes = await Http.GetFromJsonAsync<Note[]>("/Notes");
+    }
+
+    public class Note
+    {
+        public Guid id{ get; set; }
+
+        public string content { get; set; } = string.Empty;
+    }
+}
